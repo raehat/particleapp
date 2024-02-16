@@ -13,6 +13,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.particleapp.R
 import com.example.particleapp.ui.particleAppScreen.Screen
+import com.particle.base.ParticleNetwork
+import com.particle.network.ParticleNetworkAuth.isLogin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -34,7 +36,11 @@ fun SplashScreen(navController: NavHostController) {
     LaunchedEffect(Unit) {
         CoroutineScope(Dispatchers.Main).launch {
             delay(1000)
-            navController.navigate(Screen.LoginScreen)
+            if (!ParticleNetwork.isLogin()) {
+                navController.navigate(Screen.LoginScreen)
+            } else {
+                navController.navigate(Screen.HomeScreen)
+            }
         }
     }
 }

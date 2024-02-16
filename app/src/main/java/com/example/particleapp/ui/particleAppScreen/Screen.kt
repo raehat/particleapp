@@ -4,5 +4,6 @@ class Screen(screenName: String) {
     companion object {
         const val SplashScreen = "splash_screen"
         const val LoginScreen = "login_screen"
+        const val HomeScreen = "home_screen"
     }
 }

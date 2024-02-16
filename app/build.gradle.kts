@@ -18,6 +18,10 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        manifestPlaceholders["PN_PROJECT_ID"] = "868712dc-9488-4283-a929-4dae85e0dea7"
+        manifestPlaceholders["PN_PROJECT_CLIENT_KEY"] = "c53C6koQI9zUAs1ceone3exmCwRug6uP9cldNLL3"
+        manifestPlaceholders["PN_APP_ID"] = "00da00e3-dab9-43ab-9a3e-69d0044966ed"
     }
 
     buildTypes {
@@ -69,4 +73,7 @@ dependencies {
 
     // navController
     implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    // particle network
+    implementation("network.particle:auth-service:1.4.1")
 }
