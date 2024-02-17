@@ -1,6 +1,7 @@
 package com.example.particleapp.utils
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.util.Size
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -8,39 +9,38 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST
+import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import android.graphics.ImageFormat
-import androidx.camera.core.ImageProxy
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.particleapp.data.QrCodeData
 import com.example.particleapp.ui.particleAppScreen.ParticleAppViewModel
 import com.example.particleapp.ui.particleAppScreen.Screen
-import com.google.zxing.*
-import com.google.zxing.common.HybridBinarizer
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.barcode.common.Barcode
+import com.google.mlkit.vision.common.InputImage
 import kotlinx.serialization.json.Json
-import java.nio.ByteBuffer
 
 @Composable
-fun QRScanner(navController: NavHostController, viewModel: ParticleAppViewModel) {
-    var code by remember {
-        mutableStateOf("")
-    }
+fun QRScanner(
+    navController: NavHostController,
+    viewModel: ParticleAppViewModel
+) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraProviderFuture = remember {
@@ -78,8 +78,8 @@ fun QRScanner(navController: NavHostController, viewModel: ParticleAppViewModel)
                     val imageAnalysis = ImageAnalysis.Builder()
                         .setTargetResolution(
                             Size(
-                                previewView.width,
-                                previewView.height
+                                700,
+                                500
                             )
                         )
                         .setBackpressureStrategy(STRATEGY_KEEP_ONLY_LATEST)
@@ -87,7 +87,7 @@ fun QRScanner(navController: NavHostController, viewModel: ParticleAppViewModel)
                     imageAnalysis.setAnalyzer(
                         ContextCompat.getMainExecutor(context),
                         QrCodeAnalyzer { result ->
-                            code = result
+                            onResult(result, viewModel, navController)
                         }
                     )
                     try {
@@ -104,64 +104,43 @@ fun QRScanner(navController: NavHostController, viewModel: ParticleAppViewModel)
                 },
                 modifier = Modifier.weight(1f)
             )
-            Text(
-                text = code,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(32.dp)
-            )
         }
     }
 }
+
+fun onResult(barcodeData: String, viewModel: ParticleAppViewModel, navController: NavHostController) {
+    val qrCode = Json.decodeFromString<QrCodeData>(barcodeData)
+    viewModel.paymentData = qrCode
+    navController.navigate(Screen.PayByAddressScreen)
+}
+
 class QrCodeAnalyzer(
-    private val onQrCodeScanned: (String) -> Unit
-): ImageAnalysis.Analyzer {
+    private val onResult: (String) -> Unit
+) : ImageAnalysis.Analyzer {
 
-    private val supportedImageFormats = listOf(
-        ImageFormat.YUV_420_888,
-        ImageFormat.YUV_422_888,
-        ImageFormat.YUV_444_888,
-    )
+    private val options = BarcodeScannerOptions.Builder()
+        .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS)
+        .build()
 
-    override fun analyze(image: ImageProxy) {
-        if(image.format in supportedImageFormats) {
-            val bytes = image.planes.first().buffer.toByteArray()
-            val source = PlanarYUVLuminanceSource(
-                bytes,
-                image.width,
-                image.height,
-                0,
-                0,
-                image.width,
-                image.height,
-                false
-            )
-            val binaryBmp = BinaryBitmap(HybridBinarizer(source))
-            try {
-                val result = MultiFormatReader().apply {
-                    setHints(
-                        mapOf(
-                            DecodeHintType.POSSIBLE_FORMATS to arrayListOf(
-                                BarcodeFormat.QR_CODE
-                            )
-                        )
-                    )
-                }.decode(binaryBmp)
-                onQrCodeScanned(result.text)
-            } catch(e: Exception) {
-                e.printStackTrace()
-            } finally {
-                image.close()
+    private val scanner = BarcodeScanning.getClient(options)
+
+    @SuppressLint("UnsafeOptInUsageError")
+    override fun analyze(imageProxy: ImageProxy) {
+        imageProxy.image?.let { image ->
+            scanner.process(
+                InputImage.fromMediaImage(
+                    image, imageProxy.imageInfo.rotationDegrees
+                )
+            ).addOnSuccessListener { barcode ->
+                barcode?.takeIf { it.isNotEmpty() }
+                    ?.mapNotNull { it.rawValue }
+                    ?.joinToString(",")
+                if (barcode.size > 0) {
+                    onResult(barcode[0].rawValue.toString())
+                }
+            }.addOnCompleteListener {
+                imageProxy.close()
             }
-        }
-    }
-
-    private fun ByteBuffer.toByteArray(): ByteArray {
-        rewind()
-        return ByteArray(remaining()).also {
-            get(it)
         }
     }
 }
