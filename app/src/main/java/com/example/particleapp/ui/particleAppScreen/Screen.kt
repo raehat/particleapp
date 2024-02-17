@@ -5,5 +5,6 @@ class Screen(screenName: String) {
         const val SplashScreen = "splash_screen"
         const val LoginScreen = "login_screen"
         const val HomeScreen = "home_screen"
+        const val MyAccountScreen = "my_account_screen"
     }
 }

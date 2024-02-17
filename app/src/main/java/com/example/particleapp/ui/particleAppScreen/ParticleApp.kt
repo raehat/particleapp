@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
@@ -14,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.particleapp.ui.particleAppScreen.homescreen.HomeScreen
+import com.example.particleapp.ui.particleAppScreen.homescreen.MyAccountScreen
 import com.example.particleapp.ui.particleAppScreen.loginscreen.LoginScreen
 import com.example.particleapp.ui.particleAppScreen.splashscreen.SplashScreen
 import com.example.particleapp.ui.theme.ParticleAppTheme
@@ -40,7 +40,10 @@ class ParticleApp : ComponentActivity() {
                             ColumnScreen { LoginScreen(navController, viewModel, showToast) }
                         }
                         composable(route = Screen.HomeScreen) {
-                              HomeScreen(navController, viewModel, showToast)
+                            HomeScreen(navController, viewModel, showToast)
+                        }
+                        composable(route = Screen.MyAccountScreen) {
+                            MyAccountScreen(navController, viewModel)
                         }
                     }
                 }

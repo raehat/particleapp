@@ -76,4 +76,10 @@ dependencies {
 
     // particle network
     implementation("network.particle:auth-service:1.4.1")
+
+    // coil
+    implementation("io.coil-kt:coil-compose:2.0.0-rc01")
+
+    // qr code generator
+    implementation("com.google.zxing:core:3.4.1")
 }

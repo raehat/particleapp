@@ -6,32 +6,27 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,11 +40,14 @@ import com.example.particleapp.ui.particleAppScreen.ParticleAppViewModel
 import com.example.particleapp.ui.particleAppScreen.Screen
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 
 @Composable
 fun HomeScreen(
@@ -60,14 +58,15 @@ fun HomeScreen(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Header()
+        val navigateToMyAccountScreen = { navController.navigate(Screen.MyAccountScreen) }
+        HeaderHomeScreen(navigateToMyAccountScreen, viewModel::avatar)
         ImageHomeScreen()
-        OptionsHomeScreen()
+        OptionsHomeScreen(navigateToMyAccountScreen)
     }
 }
 
 @Composable
-fun OptionsHomeScreen() {
+fun OptionsHomeScreen(navigateToMyAccountScreen: () -> Unit) {
     Row(
         modifier = Modifier
             .padding(vertical = 10.dp),
@@ -82,7 +81,7 @@ fun OptionsHomeScreen() {
     Column {
         ViewSentTransactions()
         ViewUnclaimedTransactions()
-        MyAccount()
+        MyAccount(navigateToMyAccountScreen)
     }
 }
 
@@ -124,8 +123,8 @@ fun HomeScreenRowButton(
 }
 
 @Composable
-fun MyAccount() {
-    HomeScreenRowButton(icon = Icons.Default.Person, buttonText = "My Account", onClick = {  })
+fun MyAccount(navigateToMyAccountScreen: () -> Unit) {
+    HomeScreenRowButton(icon = Icons.Default.Person, buttonText = "My Account", onClick = { navigateToMyAccountScreen() })
 }
 
 @Composable
@@ -254,30 +253,40 @@ fun CardButton(content: @Composable () -> Unit) {
 }
 
 @Composable
-fun Header() {
+fun HeaderHomeScreen(navigateToMyAccountScreen: () -> Unit, getAvatar: () -> String?) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .padding(top = 40.dp, start = 20.dp, bottom = 20.dp)
     ) {
         AddressEditText()
-        MyAccountButton()
+        MyAccountButton(navigateToMyAccountScreen, getAvatar)
     }
 }
 
 @Composable
-fun MyAccountButton() {
+fun MyAccountButton(navigateToMyAccountScreen: () -> Unit, getAvatar: () -> String?) {
     Button(
-        onClick = {  },
+        onClick = { navigateToMyAccountScreen() },
         colors = ButtonDefaults.buttonColors(Color.Transparent),
         modifier = Modifier
     ) {
-        Icon(
-            imageVector = Icons.Default.AccountCircle,
-            contentDescription = "Account Icon",
-            modifier = Modifier.size(48.dp),
-            tint = MaterialTheme.colorScheme.onSurface
-        )
+        if (getAvatar() != null) {
+            Image(
+                painter = rememberAsyncImagePainter(getAvatar()),
+                contentDescription = null,
+                modifier = Modifier.size(48.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Default.AccountCircle,
+                contentDescription = "Account Icon",
+                modifier = Modifier.size(48.dp),
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+        }
     }
 }
 
