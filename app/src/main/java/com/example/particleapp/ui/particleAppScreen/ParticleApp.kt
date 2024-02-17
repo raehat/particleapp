@@ -14,6 +14,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.particleapp.ui.particleAppScreen.homescreen.HomeScreen
 import com.example.particleapp.ui.particleAppScreen.homescreen.MyAccountScreen
+import com.example.particleapp.ui.particleAppScreen.homescreen.PayByAddressScreen
+import com.example.particleapp.ui.particleAppScreen.homescreen.SelectDestinationChainScreen
+import com.example.particleapp.ui.particleAppScreen.homescreen.SwitchChainScreen
 import com.example.particleapp.ui.particleAppScreen.loginscreen.LoginScreen
 import com.example.particleapp.ui.particleAppScreen.splashscreen.SplashScreen
 import com.example.particleapp.ui.theme.ParticleAppTheme
@@ -43,7 +46,16 @@ class ParticleApp : ComponentActivity() {
                             HomeScreen(navController, viewModel, showToast)
                         }
                         composable(route = Screen.MyAccountScreen) {
-                            MyAccountScreen(navController, viewModel)
+                            MyAccountScreen(navController, viewModel, showToast)
+                        }
+                        composable(route = Screen.SwitchChainScreen) {
+                            SwitchChainScreen(navController, viewModel, showToast)
+                        }
+                        composable(route = Screen.PayByAddressScreen) {
+                            PayByAddressScreen(navController, viewModel)
+                        }
+                        composable(route = Screen.SelectDestinationChainScreen) {
+                            SelectDestinationChainScreen(navController, viewModel)
                         }
                     }
                 }

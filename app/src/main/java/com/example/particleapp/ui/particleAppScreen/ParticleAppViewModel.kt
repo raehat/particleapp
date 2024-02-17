@@ -1,25 +1,32 @@
 package com.example.particleapp.ui.particleAppScreen
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.particle.base.ParticleNetwork
 import com.particle.base.data.ErrorInfo
 import com.particle.base.data.WebOutput
 import com.particle.base.data.WebServiceCallback
 import com.particle.base.model.LoginType
+import com.particle.base.model.ResultCallback
 import com.particle.base.model.SupportAuthType
 import com.particle.base.model.UserInfo
 import com.particle.network.ParticleNetworkAuth.getAddress
 import com.particle.network.ParticleNetworkAuth.getUserInfo
 import com.particle.network.ParticleNetworkAuth.login
 import com.particle.network.ParticleNetworkAuth.logout
+import com.particle.network.ParticleNetworkAuth.switchChain
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import network.particle.chains.ChainInfo
 
 class ParticleAppViewModel : ViewModel() {
     val userInfomation : UserInfo? by lazy { getUserInfo() }
+    var destinationChainInfo by mutableStateOf(ParticleNetwork.chainInfo)
     fun login(onLoginSuccessful : () -> Unit, onLoginFailed : (String) -> Unit) {
         ParticleNetwork.login(
             loginType = LoginType.EMAIL,
             account = "",
-            supportAuthTypeValues = SupportAuthType.ALL.value,
+            supportAuthTypeValues = SupportAuthType.GOOGLE.value or SupportAuthType.FACEBOOK.value or SupportAuthType.PHONE.value,
             loginCallback = object : WebServiceCallback<UserInfo> {
                 override fun success(output: UserInfo) {
                     onLoginSuccessful()
@@ -41,6 +48,21 @@ class ParticleAppViewModel : ViewModel() {
                 onLogoutFailed(errMsg.message)
             }
         })
+    }
+
+    fun switchChain(chainInfo: ChainInfo, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        ParticleNetwork.switchChain(
+            chainInfo = chainInfo,
+            callback = object : ResultCallback {
+                override fun success() {
+                    onSuccess()
+                }
+
+                override fun failure() {
+                    onFailure()
+                }
+            }
+        )
     }
 
     private fun getUserInfo() : UserInfo? = ParticleNetwork.getUserInfo()

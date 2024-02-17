@@ -59,21 +59,25 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val navigateToMyAccountScreen = { navController.navigate(Screen.MyAccountScreen) }
+        val navigateToPayByAddressScreen = { navController.navigate(Screen.PayByAddressScreen) }
         HeaderHomeScreen(navigateToMyAccountScreen, viewModel::avatar)
         ImageHomeScreen()
-        OptionsHomeScreen(navigateToMyAccountScreen)
+        OptionsHomeScreen(navigateToMyAccountScreen, navigateToPayByAddressScreen)
     }
 }
 
 @Composable
-fun OptionsHomeScreen(navigateToMyAccountScreen: () -> Unit) {
+fun OptionsHomeScreen(
+    navigateToMyAccountScreen: () -> Unit,
+    navigateToPayByAddressScreen: () -> Unit
+) {
     Row(
         modifier = Modifier
             .padding(vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         CardButton { PayByQrCodeButton() }
-        CardButton { PayByAddressButton() }
+        CardButton { PayByAddressButton(navigateToPayByAddressScreen) }
         CardButton { BuyCryptoButton() }
         CardButton { SellCryptoButton() }
     }
@@ -187,9 +191,9 @@ fun BuyCryptoButton() {
 }
 
 @Composable
-fun PayByAddressButton() {
+fun PayByAddressButton(navigateToPayByAddressScreen: () -> Unit) {
     Button(
-        onClick = {  },
+        onClick = { navigateToPayByAddressScreen() },
         colors = ButtonDefaults.buttonColors(Color.Transparent),
         modifier = Modifier
     ) {

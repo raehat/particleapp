@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
@@ -33,19 +34,39 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.particleapp.ui.particleAppScreen.ParticleAppViewModel
+import com.example.particleapp.ui.particleAppScreen.Screen
 import com.example.particleapp.utils.QrCodeUtils
-import com.particle.network.ParticleNetworkAuth.getUserInfo
 
 @Composable
-fun MyAccountScreen(navController: NavHostController, viewModel: ParticleAppViewModel) {
+fun MyAccountScreen(
+    navController: NavHostController,
+    viewModel: ParticleAppViewModel,
+    showToast: (String) -> Unit
+) {
     Column(
         modifier = Modifier
             .padding(top = 40.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        HeaderMyAccountScreen(onBackPressed = { navController.popBackStack() })
+        HeaderScreen(onBackPressed = { navController.popBackStack() })
         UserInfoCard(viewModel)
         CryptoInfoCard(viewModel)
+        OptionsMyAccountScreen(viewModel, navController, showToast)
+    }
+}
+
+@Composable
+fun OptionsMyAccountScreen(
+    viewModel: ParticleAppViewModel,
+    navController: NavHostController,
+    showToast: (String) -> Unit
+) {
+    Column {
+        HomeScreenRowButton(icon = Icons.Default.Edit, buttonText = "Switch Chain", onClick = { navController.navigate(Screen.SwitchChainScreen) })
+        HomeScreenRowButton(icon = Icons.Default.AccountCircle, buttonText = "Log Out", onClick = { viewModel.logout(
+            onLogoutSuccessful = { navController.navigate(Screen.LoginScreen) },
+            onLogoutFailed = { showToast("Log out failed! $it") }
+        ) })
     }
 }
 
@@ -134,7 +155,7 @@ fun UserInfoCard(viewModel: ParticleAppViewModel) {
 }
 
 @Composable
-fun HeaderMyAccountScreen(
+fun HeaderScreen(
     onBackPressed: () -> Unit = {},
     onMenuClicked: () -> Unit = {},
 ) {
