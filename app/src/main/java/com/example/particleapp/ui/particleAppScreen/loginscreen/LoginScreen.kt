@@ -17,13 +17,13 @@ fun LoginScreen(
     viewModel: ParticleAppViewModel,
     showToast: (String) -> Unit
 ) {
-    Image(painter = painterResource(id = R.drawable.home_screen_logo), contentDescription = null)
+    Image(painter = painterResource(id = R.drawable.splash_screen_logo), contentDescription = null)
     Text(
         text = "To get started, please click on login. You will be redirected to the login page.",
         textAlign = TextAlign.Center
     )
     ParticleAppButton(buttonText = "Login", onClick = { viewModel.login(
         onLoginSuccessful = { navController.navigate(Screen.HomeScreen) },
-        onLoginFailed = { showToast("Login Failed!") }
+        onLoginFailed = { showToast("Login Failed: $it") }
     ) })
 }

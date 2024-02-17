@@ -35,7 +35,7 @@ fun SplashScreen(navController: NavHostController) {
     )
     LaunchedEffect(Unit) {
         CoroutineScope(Dispatchers.Main).launch {
-            delay(1000)
+            delay(0)
             if (!ParticleNetwork.isLogin()) {
                 navController.navigate(Screen.LoginScreen)
             } else {

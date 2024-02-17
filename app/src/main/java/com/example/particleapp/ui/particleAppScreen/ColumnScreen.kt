@@ -11,8 +11,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ColumnScreen(content: @Composable () -> Unit) {
     Column(
-        modifier = Modifier
-            .padding(horizontal = 30.dp),
+        modifier = Modifier.
+            padding(horizontal = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
