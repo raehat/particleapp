@@ -20,6 +20,7 @@ import com.example.particleapp.ui.particleAppScreen.homescreen.SwitchChainScreen
 import com.example.particleapp.ui.particleAppScreen.loginscreen.LoginScreen
 import com.example.particleapp.ui.particleAppScreen.splashscreen.SplashScreen
 import com.example.particleapp.ui.theme.ParticleAppTheme
+import com.example.particleapp.utils.QRScanner
 
 class ParticleApp : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +44,7 @@ class ParticleApp : ComponentActivity() {
                             ColumnScreen { LoginScreen(navController, viewModel, showToast) }
                         }
                         composable(route = Screen.HomeScreen) {
-                            HomeScreen(navController, viewModel, showToast)
+                            HomeScreen(navController, viewModel)
                         }
                         composable(route = Screen.MyAccountScreen) {
                             MyAccountScreen(navController, viewModel, showToast)
@@ -56,6 +57,9 @@ class ParticleApp : ComponentActivity() {
                         }
                         composable(route = Screen.SelectDestinationChainScreen) {
                             SelectDestinationChainScreen(navController, viewModel)
+                        }
+                        composable(route = Screen.QrScanner) {
+                            QRScanner(navController, viewModel)
                         }
                     }
                 }

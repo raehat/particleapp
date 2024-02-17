@@ -11,5 +11,6 @@ class Screen(screenName: String) {
         const val SwitchChainScreen = "switch_chain_screen"
         const val PayByAddressScreen = "pay_by_address"
         const val SelectDestinationChainScreen = "select_destination_chain"
+        const val QrScanner = "qr_scanner"
     }
 }

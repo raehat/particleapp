@@ -36,6 +36,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.particleapp.ui.particleAppScreen.ParticleAppViewModel
 import com.example.particleapp.ui.particleAppScreen.Screen
 import com.example.particleapp.utils.QrCodeUtils
+import com.particle.network.ParticleNetworkAuth.getAddress
 
 @Composable
 fun MyAccountScreen(
@@ -105,7 +106,10 @@ fun CryptoInfoCard(viewModel: ParticleAppViewModel) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Image(
-                        bitmap = QrCodeUtils.getQrCodeBitmap("lolol"),
+                        bitmap = QrCodeUtils.getReceivingQrCode(
+                            address = viewModel.particleNetwork().getAddress(),
+                            chainInfo = viewModel.particleNetwork().chainInfo
+                        ),
                         contentDescription = null
                     )
                     Text(modifier = Modifier.padding(top = 10.dp), text = "*scan this QR code to receive crypto", fontSize = 10.sp)

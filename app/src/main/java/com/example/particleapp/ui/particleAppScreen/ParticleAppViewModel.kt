@@ -1,6 +1,5 @@
 package com.example.particleapp.ui.particleAppScreen
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.particle.base.ParticleNetwork
 import com.particle.base.data.ErrorInfo
@@ -15,13 +14,17 @@ import com.particle.network.ParticleNetworkAuth.getUserInfo
 import com.particle.network.ParticleNetworkAuth.login
 import com.particle.network.ParticleNetworkAuth.logout
 import com.particle.network.ParticleNetworkAuth.switchChain
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import com.example.particleapp.data.QrCodeData
 import network.particle.chains.ChainInfo
 
 class ParticleAppViewModel : ViewModel() {
     val userInfomation : UserInfo? by lazy { getUserInfo() }
-    var destinationChainInfo by mutableStateOf(ParticleNetwork.chainInfo)
+    var paymentData = QrCodeData(
+        address = "",
+        amount = "0",
+        chainId = ParticleNetwork.chainId.toString(),
+        chainName = ParticleNetwork.chainName
+    )
     fun login(onLoginSuccessful : () -> Unit, onLoginFailed : (String) -> Unit) {
         ParticleNetwork.login(
             loginType = LoginType.EMAIL,

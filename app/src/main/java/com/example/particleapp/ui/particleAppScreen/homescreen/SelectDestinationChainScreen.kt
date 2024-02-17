@@ -24,7 +24,8 @@ fun SelectDestinationChainScreen(
         ChainListWithSearch(
             items = ChainInfo.getAllChains(),
             onClick = { chainInfo ->
-                viewModel.destinationChainInfo = chainInfo
+                viewModel.paymentData.chainId = chainInfo.id.toString()
+                viewModel.paymentData.chainName = chainInfo.name
                 navController.popBackStack()
             }
         )

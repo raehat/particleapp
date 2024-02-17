@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -45,16 +46,32 @@ fun PayByAddressScreen(navController: NavHostController, viewModel: ParticleAppV
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         HeaderScreen(onBackPressed = { navController.popBackStack() })
-        ReceivingAddressCard()
+        ReceivingAddressCard(viewModel)
         AmountToBeSentCard(navController, viewModel)
         Spacer(modifier = Modifier.height(10.dp))
         SourceChainCard(viewModel, navController)
         DestinationChainCard(viewModel, navController)
+        Spacer(modifier = Modifier.height(20.dp))
+        SendCryptoButton()
+    }
+}
+
+@Composable
+fun SendCryptoButton() {
+    Button(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        onClick = {  }) {
+        Text(text = "Send", fontSize = 16.sp)
     }
 }
 
 @Composable
 fun DestinationChainCard(viewModel: ParticleAppViewModel, navController: NavHostController) {
+//    val destionationChainInfo = ChainInfo.getChain(viewModel.qrCodeData.chainId.toLong(), viewModel.qrCodeData.chainName)
+//    if (destionationChainInfo != null)
+//        viewModel.destinationChainInfo = destionationChainInfo
     Column {
         Text(modifier = Modifier
             .padding(horizontal = 16.dp),
@@ -71,9 +88,15 @@ fun DestinationChainCard(viewModel: ParticleAppViewModel, navController: NavHost
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)) {
-                AsyncImage(model = viewModel.destinationChainInfo.icon, contentDescription = null)
+                AsyncImage(model = ChainInfo.getChain(
+                    viewModel.paymentData.chainId.toLong(),
+                    viewModel.paymentData.chainName
+                )?.icon, contentDescription = null)
                 Spacer(modifier = Modifier.width(15.dp))
-                Text(text = viewModel.destinationChainInfo.fullname)
+                Text(text = ChainInfo.getChain(
+                    viewModel.paymentData.chainId.toLong(),
+                    viewModel.paymentData.chainName
+                )?.fullname.toString())
             }
         }
     }
@@ -110,7 +133,7 @@ fun AmountToBeSentCard(navController: NavHostController, viewModel: ParticleAppV
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        var amountToBeSent by remember { mutableStateOf("") }
+        var amountToBeSent by remember { mutableStateOf(viewModel.paymentData.amount) }
         OutlinedTextField(
             value = amountToBeSent,
             onValueChange = { amountToBeSent = it },
@@ -157,8 +180,8 @@ fun AmountToBeSentCard(navController: NavHostController, viewModel: ParticleAppV
 }
 
 @Composable
-private fun ReceivingAddressCard() {
-    var receivingAddress by remember { mutableStateOf("") }
+private fun ReceivingAddressCard(viewModel: ParticleAppViewModel) {
+    var receivingAddress by remember { mutableStateOf(viewModel.paymentData.address) }
     OutlinedTextField(
         value = receivingAddress,
         onValueChange = { receivingAddress = it },

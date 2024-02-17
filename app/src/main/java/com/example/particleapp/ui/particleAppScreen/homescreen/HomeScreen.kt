@@ -52,8 +52,7 @@ import coil.compose.rememberAsyncImagePainter
 @Composable
 fun HomeScreen(
     navController: NavHostController,
-    viewModel: ParticleAppViewModel,
-    showToast: (String) -> Unit
+    viewModel: ParticleAppViewModel
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -62,21 +61,22 @@ fun HomeScreen(
         val navigateToPayByAddressScreen = { navController.navigate(Screen.PayByAddressScreen) }
         HeaderHomeScreen(navigateToMyAccountScreen, viewModel::avatar)
         ImageHomeScreen()
-        OptionsHomeScreen(navigateToMyAccountScreen, navigateToPayByAddressScreen)
+        OptionsHomeScreen(navigateToMyAccountScreen, navigateToPayByAddressScreen, navController)
     }
 }
 
 @Composable
 fun OptionsHomeScreen(
     navigateToMyAccountScreen: () -> Unit,
-    navigateToPayByAddressScreen: () -> Unit
+    navigateToPayByAddressScreen: () -> Unit,
+    navController: NavHostController
 ) {
     Row(
         modifier = Modifier
             .padding(vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        CardButton { PayByQrCodeButton() }
+        CardButton { PayByQrCodeButton(navController) }
         CardButton { PayByAddressButton(navigateToPayByAddressScreen) }
         CardButton { BuyCryptoButton() }
         CardButton { SellCryptoButton() }
@@ -216,9 +216,9 @@ fun PayByAddressButton(navigateToPayByAddressScreen: () -> Unit) {
 }
 
 @Composable
-fun PayByQrCodeButton() {
+fun PayByQrCodeButton(navController: NavHostController) {
     Button(
-        onClick = {  },
+        onClick = { navController.navigate(Screen.QrScanner) },
         colors = ButtonDefaults.buttonColors(Color.Transparent),
         modifier = Modifier
     ) {
@@ -279,7 +279,8 @@ fun MyAccountButton(navigateToMyAccountScreen: () -> Unit, getAvatar: () -> Stri
             Image(
                 painter = rememberAsyncImagePainter(getAvatar()),
                 contentDescription = null,
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier
+                    .size(48.dp)
                     .clip(CircleShape),
                 contentScale = ContentScale.Crop
             )

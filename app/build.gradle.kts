@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -80,6 +81,19 @@ dependencies {
     // coil
     implementation("io.coil-kt:coil-compose:2.0.0-rc01")
 
-    // qr code generator
+    // qr code
     implementation("com.google.zxing:core:3.4.1")
+    implementation("com.google.guava:guava:31.0.1-android")
+
+    // CameraX
+    implementation("androidx.camera:camera-camera2:1.0.2")
+    implementation("androidx.camera:camera-lifecycle:1.0.2")
+    implementation("androidx.camera:camera-view:1.0.0-alpha31")
+
+    // Zxing
+    implementation("com.google.zxing:core:3.3.3")
+
+    // json serializer
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+
 }
