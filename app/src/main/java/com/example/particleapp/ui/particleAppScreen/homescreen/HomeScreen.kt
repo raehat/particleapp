@@ -40,6 +40,7 @@ import com.example.particleapp.ui.particleAppScreen.Screen
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -62,7 +63,8 @@ fun HomeScreen(
 fun OptionsHomeScreen() {
     Row(
         modifier = Modifier
-            .padding(vertical = 10.dp)
+            .padding(vertical = 10.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         CardButton { PayByQrCodeButton() }
         CardButton { PayByAddressButton() }
@@ -78,11 +80,20 @@ fun SellCryptoButton() {
         colors = ButtonDefaults.buttonColors(Color.Transparent),
         modifier = Modifier
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.transfer_logo),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.transfer_logo),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+            Text(modifier = Modifier.padding(top = 10.dp),
+                text = "Sell\ncrypto",
+                fontSize = 10.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center)
+        }
     }
 }
 
@@ -93,11 +104,21 @@ fun BuyCryptoButton() {
         colors = ButtonDefaults.buttonColors(Color.Transparent),
         modifier = Modifier
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.transfer_logo),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.transfer_logo),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+            Text(modifier = Modifier.padding(top = 10.dp),
+                text = "Buy\ncrypto",
+                fontSize = 10.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 
@@ -108,11 +129,21 @@ fun PayByAddressButton() {
         colors = ButtonDefaults.buttonColors(Color.Transparent),
         modifier = Modifier
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.bank_logo),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.bank_logo),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+            Text(modifier = Modifier.padding(top = 10.dp),
+                text = "Pay by\naddress",
+                fontSize = 10.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 
@@ -123,19 +154,29 @@ fun PayByQrCodeButton() {
         colors = ButtonDefaults.buttonColors(Color.Transparent),
         modifier = Modifier
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.qr_code),
-            contentDescription = null,
-            modifier = Modifier.size(30.dp),
-            tint = MaterialTheme.colorScheme.onSurface
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.qr_code),
+                contentDescription = null,
+                modifier = Modifier.size(30.dp),
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+            Text(modifier = Modifier.padding(top = 10.dp),
+                text = "Pay by\nQR code",
+                fontSize = 10.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center)
+        }
     }
 }
 
 @Composable
 fun CardButton(content: @Composable () -> Unit) {
     Card(
-        modifier = Modifier,
+        modifier = Modifier
+            .padding(horizontal = 5.dp),
         elevation = CardDefaults.cardElevation(10.dp)
     ) {
         Column(
