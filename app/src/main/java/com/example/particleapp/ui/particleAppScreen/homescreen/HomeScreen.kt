@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,6 +16,11 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -40,6 +46,7 @@ import com.example.particleapp.ui.particleAppScreen.Screen
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -71,6 +78,64 @@ fun OptionsHomeScreen() {
         CardButton { BuyCryptoButton() }
         CardButton { SellCryptoButton() }
     }
+
+    Column {
+        ViewSentTransactions()
+        ViewUnclaimedTransactions()
+        MyAccount()
+    }
+}
+
+@Composable
+fun HomeScreenRowButton(
+    icon: ImageVector,
+    buttonText: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp, horizontal = 16.dp),
+        shape = RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.background)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = "Button Icon",
+                modifier = Modifier.size(24.dp),
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+            Spacer(modifier = Modifier.width(30.dp))
+            Text(text = buttonText, color = MaterialTheme.colorScheme.onSurface)
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(
+                imageVector = Icons.Default.ArrowForward,
+                contentDescription = "Arrow Icon",
+                modifier = Modifier.size(24.dp),
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}
+
+@Composable
+fun MyAccount() {
+    HomeScreenRowButton(icon = Icons.Default.Person, buttonText = "My Account", onClick = {  })
+}
+
+@Composable
+fun ViewUnclaimedTransactions() {
+    HomeScreenRowButton(icon = Icons.Default.List, buttonText = "View Unclaimed Transactions", onClick = {  })
+}
+
+@Composable
+fun ViewSentTransactions() {
+    HomeScreenRowButton(icon = Icons.Default.Send, buttonText = "View Sent Transactions", onClick = {  })
 }
 
 @Composable
