@@ -30,7 +30,7 @@ fun SwitchChainScreen(
                     chainInfo,
                     onSuccess = {
                         showToast("Chain switched to ${chainInfo.fullname}")
-                        navController.navigate(Screen.HomeScreen)
+                        navController.popBackStack()
                     },
                     onFailure = { showToast("Cannot Switch Chain") })
             }

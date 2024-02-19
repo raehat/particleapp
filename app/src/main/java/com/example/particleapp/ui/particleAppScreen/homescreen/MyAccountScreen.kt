@@ -35,8 +35,10 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.particleapp.ui.particleAppScreen.ParticleAppViewModel
 import com.example.particleapp.ui.particleAppScreen.Screen
+import com.example.particleapp.utils.Blockchain
 import com.example.particleapp.utils.QrCodeUtils
 import com.particle.network.ParticleNetworkAuth.getAddress
+import com.particle.network.ParticleNetworkAuth.getUserInfo
 
 @Composable
 fun MyAccountScreen(
@@ -65,7 +67,9 @@ fun OptionsMyAccountScreen(
     Column {
         HomeScreenRowButton(icon = Icons.Default.Edit, buttonText = "Switch Chain", onClick = { navController.navigate(Screen.SwitchChainScreen) })
         HomeScreenRowButton(icon = Icons.Default.AccountCircle, buttonText = "Log Out", onClick = { viewModel.logout(
-            onLogoutSuccessful = { navController.navigate(Screen.LoginScreen) },
+            onLogoutSuccessful = {
+                navController.navigate(Screen.LoginScreen)
+        },
             onLogoutFailed = { showToast("Log out failed! $it") }
         ) })
     }
@@ -116,7 +120,7 @@ fun CryptoInfoCard(viewModel: ParticleAppViewModel) {
                 }
                 Column(modifier = Modifier.padding(horizontal = 10.dp)) {
                     Text(text = "Balance", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    Text(text = "32" + viewModel.particleNetwork().chainInfo.nativeCurrency.symbol)
+                    Text(text = Blockchain.getBalance().toString() + viewModel.particleNetwork().chainInfo.nativeCurrency.symbol)
                     Text(text = "$48", fontStyle = FontStyle.Italic)
                 }
             }
@@ -134,7 +138,7 @@ fun UserInfoCard(viewModel: ParticleAppViewModel) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
-            Text(text = viewModel.userInfomation?.name.toString())
+            Text(text = viewModel.particleNetwork().getUserInfo()?.name.toString())
             Text(text = viewModel.userLoginEmail().toString())
             Text(text = viewModel.address(), fontSize = 10.sp, fontStyle = FontStyle.Italic)
         }

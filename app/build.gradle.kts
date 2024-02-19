@@ -55,7 +55,11 @@ android {
 }
 
 dependencies {
-
+    modules {
+        module("org.bouncycastle:bcprov-jdk15to18") {
+            replacedBy("org.bouncycastle:bcprov-jdk15on")
+        }
+    }
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.8.2")
@@ -78,6 +82,7 @@ dependencies {
 
     // particle network
     implementation("network.particle:auth-service:1.4.1")
+    implementation("network.particle:api-service:1.4.1")
 
     // coil
     implementation("io.coil-kt:coil-compose:2.0.0-rc01")
@@ -97,4 +102,6 @@ dependencies {
     // json serializer
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
 
+    // web3j library
+    implementation("org.web3j:core:4.8.4")
 }

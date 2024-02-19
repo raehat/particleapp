@@ -16,9 +16,9 @@ import com.particle.network.ParticleNetworkAuth.logout
 import com.particle.network.ParticleNetworkAuth.switchChain
 import com.example.particleapp.data.QrCodeData
 import network.particle.chains.ChainInfo
+import javax.net.ssl.HttpsURLConnection
 
 class ParticleAppViewModel : ViewModel() {
-    val userInfomation : UserInfo? by lazy { getUserInfo() }
     var paymentData = QrCodeData(
         address = "",
         amount = "0",
@@ -69,18 +69,18 @@ class ParticleAppViewModel : ViewModel() {
     }
 
     private fun getUserInfo() : UserInfo? = ParticleNetwork.getUserInfo()
-    fun avatar() = userInfomation?.avatar
+    fun avatar() = ParticleNetwork.getUserInfo()?.avatar
 
     fun userLoginEmail(): String? {
         var email : String? = ""
-        if (userInfomation?.email != null)
-            email = userInfomation?.email
-        else if (userInfomation?.phone != null)
-            email = userInfomation?.phone
-        else if (userInfomation?.googleEmail != null)
-            email = userInfomation?.googleEmail
-        else if (userInfomation?.facebookEmail != null)
-            email = userInfomation?.facebookEmail
+        if (ParticleNetwork.getUserInfo()?.email != null)
+            email = ParticleNetwork.getUserInfo()?.email
+        else if (ParticleNetwork.getUserInfo()?.phone != null)
+            email = ParticleNetwork.getUserInfo()?.phone
+        else if (ParticleNetwork.getUserInfo()?.googleEmail != null)
+            email = ParticleNetwork.getUserInfo()?.googleEmail
+        else if (ParticleNetwork.getUserInfo()?.facebookEmail != null)
+            email = ParticleNetwork.getUserInfo()?.facebookEmail
         return email
     }
 

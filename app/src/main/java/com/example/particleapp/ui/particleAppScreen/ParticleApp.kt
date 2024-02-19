@@ -53,7 +53,7 @@ class ParticleApp : ComponentActivity() {
                             SwitchChainScreen(navController, viewModel, showToast)
                         }
                         composable(route = Screen.PayByAddressScreen) {
-                            PayByAddressScreen(navController, viewModel)
+                            PayByAddressScreen(navController, viewModel, showToast)
                         }
                         composable(route = Screen.SelectDestinationChainScreen) {
                             SelectDestinationChainScreen(navController, viewModel)

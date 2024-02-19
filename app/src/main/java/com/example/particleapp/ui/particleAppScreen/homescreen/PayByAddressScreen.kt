@@ -36,33 +36,65 @@ import coil.compose.AsyncImage
 import com.example.particleapp.R
 import com.example.particleapp.ui.particleAppScreen.ParticleAppViewModel
 import com.example.particleapp.ui.particleAppScreen.Screen
+import com.example.particleapp.utils.Blockchain
+import com.particle.base.ParticleNetwork
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import network.particle.chains.ChainInfo
 
 @Composable
-fun PayByAddressScreen(navController: NavHostController, viewModel: ParticleAppViewModel) {
+fun PayByAddressScreen(
+    navController: NavHostController,
+    viewModel: ParticleAppViewModel,
+    showToast: (String) -> Unit
+) {
+    var receivingAddress by remember { mutableStateOf(viewModel.paymentData.address) }
+    var amountToBeSent by remember { mutableStateOf(viewModel.paymentData.amount) }
     Column(
         modifier = Modifier
         .padding(top = 40.dp, start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         HeaderScreen(onBackPressed = { navController.popBackStack() })
-        ReceivingAddressCard(viewModel)
-        AmountToBeSentCard(navController, viewModel)
+        ReceivingAddressCard(viewModel.paymentData.address, onTextChanged = {
+            receivingAddress = it
+        })
+        AmountToBeSentCard(navController, viewModel, amountToBeSent, onTextChanged = {
+            amountToBeSent = it
+        })
         Spacer(modifier = Modifier.height(10.dp))
         SourceChainCard(viewModel, navController)
         DestinationChainCard(viewModel, navController)
         Spacer(modifier = Modifier.height(20.dp))
-        SendCryptoButton()
+        SendCryptoButton(onClick = {
+            CoroutineScope(Dispatchers.IO).launch {
+                Blockchain.sendCrossChainPayment(
+                    amountToBeSent,
+                    ParticleNetwork.chainName.lowercase(),
+                    viewModel.paymentData.chainName.lowercase(),
+                    receivingAddress,
+                    onSuccess = {
+                        showToast("Payment successful")
+                    },
+                    onFailed = {
+
+                    }
+                )
+            }
+        })
     }
 }
 
 @Composable
-fun SendCryptoButton() {
+fun SendCryptoButton(onClick: () -> Unit) {
     Button(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
-        onClick = {  }) {
+        onClick = {
+            onClick()
+        }) {
         Text(text = "Send", fontSize = 16.sp)
     }
 }
@@ -129,14 +161,13 @@ fun SourceChainCard(viewModel: ParticleAppViewModel, navController: NavHostContr
 }
 
 @Composable
-fun AmountToBeSentCard(navController: NavHostController, viewModel: ParticleAppViewModel) {
+fun AmountToBeSentCard(navController: NavHostController, viewModel: ParticleAppViewModel, amount: String, onTextChanged: (String) -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        var amountToBeSent by remember { mutableStateOf(viewModel.paymentData.amount) }
         OutlinedTextField(
-            value = amountToBeSent,
-            onValueChange = { amountToBeSent = it },
+            value = amount,
+            onValueChange = { onTextChanged(it) },
             placeholder = { Text("Amount") },
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
             shape = RoundedCornerShape(30.dp),
@@ -180,11 +211,10 @@ fun AmountToBeSentCard(navController: NavHostController, viewModel: ParticleAppV
 }
 
 @Composable
-private fun ReceivingAddressCard(viewModel: ParticleAppViewModel) {
-    var receivingAddress by remember { mutableStateOf(viewModel.paymentData.address) }
+private fun ReceivingAddressCard(address: String, onTextChanged: (String) -> Unit) {
     OutlinedTextField(
-        value = receivingAddress,
-        onValueChange = { receivingAddress = it },
+        value = address,
+        onValueChange = { onTextChanged(it) },
         placeholder = { Text("Receiving Address") },
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
         shape = RoundedCornerShape(30.dp),
