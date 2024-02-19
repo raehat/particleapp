@@ -12,5 +12,8 @@ class Screen(screenName: String) {
         const val PayByAddressScreen = "pay_by_address"
         const val SelectDestinationChainScreen = "select_destination_chain"
         const val QrScanner = "qr_scanner"
+        const val PaymentCompletedScreen = "payment_completed"
+        const val ViewSentTxScreen = "view_sent_tx_screen"
+        const val ViewUnclaimedTxScreen = "view_unclaimed_tx_screen"
     }
 }

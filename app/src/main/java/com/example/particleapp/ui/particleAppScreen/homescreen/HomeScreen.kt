@@ -83,8 +83,8 @@ fun OptionsHomeScreen(
     }
 
     Column {
-        ViewSentTransactions()
-        ViewUnclaimedTransactions()
+        ViewSentTransactions(navController)
+        ViewUnclaimedTransactions(navController)
         MyAccount(navigateToMyAccountScreen)
     }
 }
@@ -132,13 +132,17 @@ fun MyAccount(navigateToMyAccountScreen: () -> Unit) {
 }
 
 @Composable
-fun ViewUnclaimedTransactions() {
-    HomeScreenRowButton(icon = Icons.Default.List, buttonText = "View Unclaimed Transactions", onClick = {  })
+fun ViewUnclaimedTransactions(navController: NavHostController) {
+    HomeScreenRowButton(icon = Icons.Default.List, buttonText = "View Unclaimed Transactions", onClick = {
+        navController.navigate(Screen.ViewUnclaimedTxScreen)
+    })
 }
 
 @Composable
-fun ViewSentTransactions() {
-    HomeScreenRowButton(icon = Icons.Default.Send, buttonText = "View Sent Transactions", onClick = {  })
+fun ViewSentTransactions(navController: NavHostController) {
+    HomeScreenRowButton(icon = Icons.Default.Send, buttonText = "View Sent Transactions", onClick = {
+        navController.navigate(Screen.ViewSentTxScreen)
+    })
 }
 
 @Composable

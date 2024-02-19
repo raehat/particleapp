@@ -19,6 +19,7 @@ import network.particle.chains.ChainInfo
 import javax.net.ssl.HttpsURLConnection
 
 class ParticleAppViewModel : ViewModel() {
+    var paymentSuccess: Boolean = false
     var paymentData = QrCodeData(
         address = "",
         amount = "0",

@@ -119,9 +119,12 @@ fun CryptoInfoCard(viewModel: ParticleAppViewModel) {
                     Text(modifier = Modifier.padding(top = 10.dp), text = "*scan this QR code to receive crypto", fontSize = 10.sp)
                 }
                 Column(modifier = Modifier.padding(horizontal = 10.dp)) {
-                    Text(text = "Balance", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    Text(text = Blockchain.getBalance().toString() + viewModel.particleNetwork().chainInfo.nativeCurrency.symbol)
-                    Text(text = "$48", fontStyle = FontStyle.Italic)
+                    Text(text = "Balance (Native)", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Text(text = String.format("%.2f", Blockchain.getBalance()) + viewModel.particleNetwork().chainInfo.nativeCurrency.symbol)
+                    Spacer(modifier = Modifier.height(5.dp))
+
+                    Text(text = "Balance (USDC)", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Text(text = String.format("%.2f", Blockchain.getUSDCBalance()) + "USDC")
                 }
             }
         }

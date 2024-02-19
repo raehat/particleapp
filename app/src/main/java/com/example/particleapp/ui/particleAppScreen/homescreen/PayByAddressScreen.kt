@@ -4,9 +4,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,6 +19,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -67,24 +70,49 @@ fun PayByAddressScreen(
         SourceChainCard(viewModel, navController)
         DestinationChainCard(viewModel, navController)
         Spacer(modifier = Modifier.height(20.dp))
+
+        var isLoading by remember { mutableStateOf(false) }
         SendCryptoButton(onClick = {
+            isLoading = true
             CoroutineScope(Dispatchers.IO).launch {
                 Blockchain.sendCrossChainPayment(
                     amountToBeSent,
                     ParticleNetwork.chainName.lowercase(),
                     viewModel.paymentData.chainName.lowercase(),
                     receivingAddress,
+                    showToast,
                     onSuccess = {
+                        isLoading = false
                         showToast("Payment successful")
+                        viewModel.paymentSuccess = true
+                        navController.navigate(Screen.PaymentCompletedScreen)
                     },
                     onFailed = {
-
+                        isLoading = false
+                        showToast("Payment Failed")
+                        viewModel.paymentSuccess = false
+                        navController.navigate(Screen.PaymentCompletedScreen)
                     }
                 )
             }
         })
+        Spacer(modifier = Modifier.height(30.dp))
+        LoadingCircle(isVisible = isLoading)
     }
 }
+
+@Composable
+fun LoadingCircle(isVisible: Boolean) {
+    if (isVisible) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator() 
+        }
+    }
+}
+
 
 @Composable
 fun SendCryptoButton(onClick: () -> Unit) {

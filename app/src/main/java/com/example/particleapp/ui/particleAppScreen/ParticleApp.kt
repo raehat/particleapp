@@ -15,8 +15,11 @@ import androidx.navigation.compose.rememberNavController
 import com.example.particleapp.ui.particleAppScreen.homescreen.HomeScreen
 import com.example.particleapp.ui.particleAppScreen.homescreen.MyAccountScreen
 import com.example.particleapp.ui.particleAppScreen.homescreen.PayByAddressScreen
+import com.example.particleapp.ui.particleAppScreen.homescreen.PaymentCompleted
 import com.example.particleapp.ui.particleAppScreen.homescreen.SelectDestinationChainScreen
 import com.example.particleapp.ui.particleAppScreen.homescreen.SwitchChainScreen
+import com.example.particleapp.ui.particleAppScreen.homescreen.ViewSentTransactionsScreen
+import com.example.particleapp.ui.particleAppScreen.homescreen.ViewUnclaimedTransactionsScreen
 import com.example.particleapp.ui.particleAppScreen.loginscreen.LoginScreen
 import com.example.particleapp.ui.particleAppScreen.splashscreen.SplashScreen
 import com.example.particleapp.ui.theme.ParticleAppTheme
@@ -36,6 +39,7 @@ class ParticleApp : ComponentActivity() {
                         Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
                     }
                     val navController = rememberNavController()
+                    val data = "true"
                     NavHost(navController = navController, startDestination = Screen.SplashScreen) {
                         composable(route = Screen.SplashScreen) {
                             ColumnScreen { SplashScreen(navController) }
@@ -60,6 +64,15 @@ class ParticleApp : ComponentActivity() {
                         }
                         composable(route = Screen.QrScanner) {
                             QRScanner(navController, viewModel)
+                        }
+                        composable(route = Screen.PaymentCompletedScreen) {
+                            PaymentCompleted(navController, viewModel)
+                        }
+                        composable(route = Screen.ViewSentTxScreen) {
+                            ViewSentTransactionsScreen(navController, viewModel, showToast)
+                        }
+                        composable(route = Screen.ViewUnclaimedTxScreen) {
+                            ViewUnclaimedTransactionsScreen(navController, viewModel, showToast)
                         }
                     }
                 }

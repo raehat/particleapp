@@ -104,4 +104,11 @@ dependencies {
 
     // web3j library
     implementation("org.web3j:core:4.8.4")
+
+    // ktor
+    implementation("io.ktor:ktor-client-core:2.3.7")
+    implementation("io.ktor:ktor-client-cio:2.3.2")
+    implementation("io.ktor:ktor-client-json:1.6.5")
+    implementation("io.ktor:ktor-client-serialization:1.6.5")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
 }
